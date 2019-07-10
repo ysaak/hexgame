@@ -1,6 +1,7 @@
 package ysaak.hexgame.service;
 
 import com.google.common.base.Preconditions;
+import ysaak.hexgame.data.Board;
 import ysaak.hexgame.data.Cell;
 import ysaak.hexgame.data.Game;
 import ysaak.hexgame.data.PlayResult;

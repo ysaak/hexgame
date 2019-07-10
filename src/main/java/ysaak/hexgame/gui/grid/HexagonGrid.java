@@ -11,6 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
+import ysaak.hexgame.data.Board;
 import ysaak.hexgame.data.Pos;
 import ysaak.hexgame.data.cellaction.ActionType;
 import ysaak.hexgame.data.cellaction.CellAction;

@@ -2,6 +2,7 @@ package ysaak.hexgame.service;
 
 import org.junit.Assert;
 import org.junit.Test;
+import ysaak.hexgame.data.Board;
 import ysaak.hexgame.data.Cell;
 import ysaak.hexgame.data.Pos;
 import ysaak.hexgame.rules.BoardRules;
