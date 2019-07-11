@@ -2,13 +2,24 @@ language: java
 sudo: false
 install: true
 addons:
-  branches:
-  - master
-  - develop
+  sonarcloud:
+    organization: "ysaak-github"
+    token:
+      secure: "quoGVoAEcK0mxAAY+eocJ/ju2CeKsREqBAluXYwrN8OrsY5DGp8KwDBlPd5uWG5jXBkBPPFy6BVP6d/xSSNr0YW0
+      aXgB/Mh3OLzY2FQ4jOiCV2FkNDlbOT/VChkHBfgpif1tHYb/TFF6xDB5GGO6BcXEgZcINPqPKVQCsagdBIJd+6d83x1Y0NMIj8w
+      ncuFXgcI3++nEibzNGWqnVBW0EcUVll44XvN/Tf8GdhCEG2akfdGWKoqzt6DYplX/sj0FEug/dzSh+G0eh2lCxLlF/ifFM+yqQc
+      XMZ0V9yJjvWb0oBb9O8leowvRXR1+UGAuTTja44ESeeumFOZO3/+wANNpUmYxwugv47efe/mYzwnyeJFGBMlTeh8FwOuAT5K2w+
+      xhH89zdc75F8pi9GxpV3zABCf6joov1ykOYNazxj99eKSZq5+NhkSx/2adiVJM3rKFOXlHsqssRMfyn2KsdgJw/ViuDu49ATPrO
+      XfP9Q0RvqNARo++PNn7YFIW0Lh8XygXs5fZ0FStl4NhFAHm3nfn6nNUx6dUUgUtuOZsR6p3p+Y4IftpQ467sENyP0fH4TKHBzr/
+      nlLPiVXLu5FDKk1ii2OdN0O0gMCllqfNFExhRP2jAjnRcmtOPIkWkJPgA6oeFgsJ4qf0vioRs5hXMvO2oBOk6UHds80SnW/nOCy
+      A="
+    branches:
+      - master
+      - develop
 jdk:
-- oraclejdk8
+  - oraclejdk8
 script:
-- mvn clean package
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=ysaak_hexgame
 cache:
   directories:
-  - '$HOME/.m2/repository'
+  - "$HOME/.m2/repository"
