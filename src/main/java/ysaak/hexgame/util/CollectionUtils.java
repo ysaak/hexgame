@@ -6,20 +6,21 @@ import java.util.List;
 import java.util.Random;
 
 public final class CollectionUtils {
-	private CollectionUtils() { /**/	}
+	private CollectionUtils() { /**/ }
+
+	private static final Random RANDOM = new Random();
 
 	public static <T> T randomItem(Collection<T> collection) {
 		return randomItems(collection, 1).get(0);
 	}
 
 	public static <T> List<T> randomItems(Collection<T> collection, int nbItem) {
-		final Random rand = new Random();
 		final List<T> randomItemList = new ArrayList<>();
 
 		List<T> givenList = new ArrayList<>(collection);
 
 		for (int i = 0; i < nbItem; i++) {
-			int randomIndex = rand.nextInt(givenList.size());
+			int randomIndex = RANDOM.nextInt(givenList.size());
 
 			T item = givenList.get(randomIndex);
 			randomItemList.add(item);

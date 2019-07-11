@@ -118,7 +118,7 @@ public class Hexagon extends Group {
 		double angle;
 
 		for (int i = 0; i < 6; i++) {
-			angle = Math.toRadians(60 * i);
+			angle = Math.toRadians(60. * i);
 			polyPoints[(i * 2)] = (centerX + HEXAGON_SIZE * Math.cos(angle));
 			polyPoints[(i * 2 + 1)] = (centerY + HEXAGON_SIZE * Math.sin(angle));
 		}
