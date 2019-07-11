@@ -3,6 +3,7 @@ package ysaak.hexgame.service;
 import org.junit.Assert;
 import org.junit.Test;
 import ysaak.hexgame.MockSaveService;
+import ysaak.hexgame.TestGameUtils;
 import ysaak.hexgame.data.Cell;
 import ysaak.hexgame.data.Game;
 import ysaak.hexgame.data.PlayResult;
@@ -16,10 +17,12 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class TestGameService {
+	private final BoardService boardService;
 	private final GameService gameService;
 
 	public TestGameService() {
-		gameService = new GameService(new MockSaveService(), new BoardService());
+		boardService = new BoardService();
+		gameService = new GameService(new MockSaveService(), boardService);
 	}
 
 	@Test
@@ -43,13 +46,13 @@ public class TestGameService {
 		// Board check
 		Assert.assertNotNull(game.board);
 
-		Assert.assertNotEquals(0, calculateGridValueSum(game));
+		Assert.assertNotEquals(0, TestGameUtils.calculateGridValueSum(game));
 	}
 
 	@Test
-	public void testPlay_withMergeAction() throws NoPathFoundException, NoCellAvailableException, SaveException {
+	public void testPlay_withMergeAction() throws NoPathFoundException, NoCellAvailableException {
 		// Given
-		Game game = gameService.start();
+		Game game = TestGameUtils.createEmptyGame(this.boardService);
 		game.board.grid.put(Pos.of(0, 0), Cell.of(1));
 		game.board.grid.put(Pos.of(1, 0), Cell.of(1));
 		game.board.grid.put(Pos.of(2, 0), Cell.of(1));
@@ -58,7 +61,8 @@ public class TestGameService {
 		Pos moveOrigin = Pos.of(4, 0);
 		Pos moveDestination = Pos.of(3, 0);
 
-		long expectedCellSum = calculateGridValueSum(game);
+		long expectedCellSum = TestGameUtils.calculateGridValueSum(game);
+		long expectedScore = 4;
 
 		// When
 		PlayResult result = gameService.play(game, moveOrigin, moveDestination);
@@ -74,20 +78,23 @@ public class TestGameService {
 		Assert.assertTrue(newGame.board.grid.get(Pos.of(1, 0)).empty);
 		Assert.assertTrue(newGame.board.grid.get(Pos.of(2, 0)).empty);
 		Assert.assertEquals(4, newGame.board.grid.get(Pos.of(3, 0)).value);
+		Assert.assertEquals(expectedCellSum, TestGameUtils.calculateGridValueSum(newGame));
 
-		Assert.assertEquals(expectedCellSum, calculateGridValueSum(newGame));
+		// Score
+		Assert.assertNotEquals(game.score, result.game.score);
+		Assert.assertEquals(expectedScore, result.game.score);
 	}
 
 	@Test
-	public void testPlay_withoutMergeAction() throws NoPathFoundException, NoCellAvailableException, SaveException {
+	public void testPlay_withoutMergeAction() throws NoPathFoundException, NoCellAvailableException {
 		// Given
-		Game game = gameService.start();
+		Game game = TestGameUtils.createEmptyGame(this.boardService);
 		game.board.grid.put(Pos.of(0, 0), Cell.of(999));
 
 		Pos moveOrigin = Pos.of(0, 0);
 		Pos moveDestination = Pos.of(3, 0);
 
-		long gridValue = calculateGridValueSum(game);
+		long gridValue = TestGameUtils.calculateGridValueSum(game);
 
 		// When
 		PlayResult result = gameService.play(game, moveOrigin, moveDestination);
@@ -102,13 +109,13 @@ public class TestGameService {
 		Assert.assertNotSame(game.nextItemList, newGame.nextItemList);
 
 		Assert.assertNotNull(newGame.board);
-		Assert.assertNotEquals(gridValue, calculateGridValueSum(newGame));
+		Assert.assertNotEquals(gridValue, TestGameUtils.calculateGridValueSum(newGame));
 	}
 
 	@Test(expected = NoCellAvailableException.class)
-	public void testPlay_gameOver() throws NoPathFoundException, NoCellAvailableException, SaveException {
+	public void testPlay_gameOver() throws NoPathFoundException, NoCellAvailableException {
 		// Given
-		Game game = gameService.start();
+		Game game = TestGameUtils.createEmptyGame(this.boardService);
 
 		Set<Pos> posSet = new HashSet<>(game.board.grid.keySet());
 		posSet.remove(Pos.of(0,0));
@@ -126,7 +133,5 @@ public class TestGameService {
 		// Exception should be thrown
 	}
 
-	private long calculateGridValueSum(final Game game) {
-		return game.board.grid.values().stream().mapToLong(c -> c.value).sum();
-	}
+
 }
